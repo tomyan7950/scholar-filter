@@ -225,7 +225,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     return;
   }
 
-  journals.push({ name: journal, aliases: [] });
+  journals.push({ name: journal, aliases: [], enabled: true });
   await chrome.storage.local.set({ journals });
 
   // Badge flash to confirm

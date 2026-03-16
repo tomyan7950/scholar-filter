@@ -191,6 +191,7 @@
     }
 
     filterStats = { total: results.length, matched: 0, nonJournal: 0 };
+    const activeJournals = settings.journals.filter((j) => j.enabled !== false);
     let trulyUnparseable = 0;
 
     results.forEach((result) => {
@@ -215,7 +216,7 @@
       // Store extracted journal name as data attribute (for context menu)
       result.dataset.sjfJournal = journal;
 
-      const isMatch = matchesJournal(journal, settings.journals);
+      const isMatch = matchesJournal(journal, activeJournals);
       const inList = settings.filterMode === "whitelist" ? isMatch : !isMatch;
 
       if (inList) {
@@ -289,7 +290,7 @@
         filterMode: "whitelist",
         displayMode: "highlight",
         nonJournalItems: "show",
-        journals: DEFAULT_JOURNALS,
+        journals: DEFAULT_JOURNALS.map((j) => ({ ...j, enabled: true })),
         firstRun: true,
       };
       await chrome.storage.local.set(defaults);
@@ -374,7 +375,8 @@
     const snippetEl = resultEl.querySelector(".gs_rs");
     const snippet = snippetEl ? snippetEl.textContent.trim() : "";
     const rawJournal = resultEl.dataset.sjfJournal || "";
-    const journal = resolveJournalName(rawJournal, settings.journals);
+    const activeJournals = settings.journals.filter((j) => j.enabled !== false);
+    const journal = resolveJournalName(rawJournal, activeJournals);
 
     // Extract year from .gs_a text
     const yearMatch = gsaText.match(/\b(19|20)\d{2}\b/);

@@ -1,5 +1,16 @@
 // Pre-populated journal list with aliases, organized by category.
 // Aliases cover common abbreviations Scholar uses in .gs_a metadata lines.
+
+// Category boundaries for the defaults picker UI
+const DEFAULT_CATEGORIES = [
+  { name: "Management — Strategy & General", count: 9 },
+  { name: "Management — OB/HR/Micro", count: 13 },
+  { name: "Psychology — General & Social", count: 10 },
+  { name: "Sociology", count: 6 },
+  { name: "Reviews & Annual Reviews", count: 5 },
+  { name: "General Science", count: 7 },
+];
+
 const DEFAULT_JOURNALS = [
   // ── Management — Strategy & General ──────────────────────────────────
   { name: "Academy of Management Journal", aliases: ["Acad Manage J", "Acad. Manage. J.", "AMJ"] },

@@ -7,7 +7,6 @@
   const emptyState = document.getElementById("empty-state");
   const searchInput = document.getElementById("search-input");
   const statusMsg = document.getElementById("status-msg");
-  const importFile = document.getElementById("import-file");
 
   let journals = [];
 
@@ -15,6 +14,9 @@
   async function load() {
     const stored = await chrome.storage.local.get("journals");
     journals = stored.journals || [];
+    // Ensure all journals have an enabled field
+    journals.forEach((j) => { if (j.enabled === undefined) j.enabled = true; });
+    sortJournals();
     render();
   }
 
@@ -35,7 +37,7 @@
       if (norm && journals.length > 0) {
         // Show "no match" inline
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="3" style="text-align:center;color:#888;padding:20px;">No journals match "${filter}"</td>`;
+        tr.innerHTML = `<td colspan="4" style="text-align:center;color:#888;padding:20px;">No journals match "${filter}"</td>`;
         tbody.appendChild(tr);
       }
       return;
@@ -48,6 +50,21 @@
       const realIdx = journals.indexOf(journal);
       const tr = document.createElement("tr");
       tr.dataset.index = realIdx;
+      if (journal.enabled === false) tr.classList.add("journal-inactive");
+
+      // Active toggle cell
+      const activeTd = document.createElement("td");
+      activeTd.className = "active-cell";
+      const toggle = document.createElement("input");
+      toggle.type = "checkbox";
+      toggle.className = "journal-toggle";
+      toggle.checked = journal.enabled !== false;
+      toggle.title = toggle.checked ? "Active — click to deactivate" : "Inactive — click to activate";
+      toggle.addEventListener("change", () => {
+        journals[realIdx].enabled = toggle.checked;
+        save();
+      });
+      activeTd.appendChild(toggle);
 
       // Name cell
       const nameTd = document.createElement("td");
@@ -85,6 +102,7 @@
       actionsTd.appendChild(editBtn);
       actionsTd.appendChild(deleteBtn);
 
+      tr.appendChild(activeTd);
       tr.appendChild(nameTd);
       tr.appendChild(aliasTd);
       tr.appendChild(actionsTd);
@@ -93,23 +111,37 @@
   }
 
   // ── CRUD Operations ────────────────────────────────────────────────
+  function sortJournals() {
+    journals.sort((a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" }));
+  }
+
   async function save() {
+    sortJournals();
     await chrome.storage.local.set({ journals });
     render(searchInput.value);
   }
 
   function addJournal() {
-    const name = prompt("Journal name:");
-    if (!name || !name.trim()) return;
+    showModal("Add Journals", `
+      <p style="margin-bottom:8px;color:#666;font-size:13px;">Enter journal names, one per line. Aliases can be added later via Edit.</p>
+      <textarea id="modal-add-input" rows="8" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:13px;resize:vertical;" placeholder="Journal of Applied Psychology&#10;Organization Science&#10;Academy of Management Journal"></textarea>
+    `, () => {
+      const input = document.getElementById("modal-add-input").value;
+      const names = input.split("\n").map((s) => s.trim()).filter(Boolean);
+      if (names.length === 0) return;
 
-    const aliasStr = prompt("Aliases (comma-separated, or leave blank):");
-    const aliases = aliasStr
-      ? aliasStr.split(",").map((a) => a.trim()).filter(Boolean)
-      : [];
-
-    journals.push({ name: name.trim(), aliases });
-    save();
-    showStatus("Journal added", "success");
+      const norm = (s) => s.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
+      let added = 0;
+      for (const name of names) {
+        const exists = journals.some((j) => norm(j.name) === norm(name));
+        if (!exists) {
+          journals.push({ name, aliases: [], enabled: true });
+          added++;
+        }
+      }
+      save();
+      showStatus(`Added ${added} journal${added !== 1 ? "s" : ""}${names.length - added > 0 ? ` (${names.length - added} already existed)` : ""}`, "success");
+    });
   }
 
   function deleteJournal(index) {
@@ -174,51 +206,48 @@
     nameInput.select();
   }
 
-  // ── Import/Export ──────────────────────────────────────────────────
-  function exportJournals() {
-    const data = JSON.stringify(journals, null, 2);
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "scholar-filter-journals.json";
-    a.click();
-    URL.revokeObjectURL(url);
-    showStatus("Journal list exported", "success");
-  }
 
-  function importJournals(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!Array.isArray(data)) throw new Error("Expected an array");
-
-        // Validate structure
-        const valid = data.every(
-          (j) => typeof j.name === "string" && j.name.trim()
-        );
-        if (!valid) throw new Error("Each entry must have a non-empty 'name' field");
-
-        // Normalize: ensure aliases is always an array
-        journals = data.map((j) => ({
-          name: j.name.trim(),
-          aliases: Array.isArray(j.aliases) ? j.aliases : [],
-        }));
-        save();
-        showStatus(`Imported ${journals.length} journals`, "success");
-      } catch (err) {
-        showStatus("Import failed: " + err.message, "error");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function resetToDefaults() {
-    if (!confirm("Replace your journal list with the default OB/Management list?")) return;
-    journals = JSON.parse(JSON.stringify(DEFAULT_JOURNALS));
+  function deleteInactive() {
+    const inactive = journals.filter((j) => j.enabled === false);
+    if (inactive.length === 0) {
+      showStatus("No inactive journals to delete", "error");
+      return;
+    }
+    if (!confirm(`Delete ${inactive.length} inactive journal${inactive.length !== 1 ? "s" : ""}?`)) return;
+    journals = journals.filter((j) => j.enabled !== false);
     save();
-    showStatus("Reset to defaults", "success");
+    showStatus(`Deleted ${inactive.length} journal${inactive.length !== 1 ? "s" : ""}`, "success");
+  }
+
+  // ── Modal Helper ────────────────────────────────────────────────────
+  function showModal(title, bodyHtml, onConfirm) {
+    // Remove existing modal
+    document.getElementById("sjf-modal-overlay")?.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "sjf-modal-overlay";
+    overlay.className = "modal-overlay";
+
+    const modal = document.createElement("div");
+    modal.className = "modal-box";
+    modal.innerHTML = `
+      <h2 style="margin-bottom:12px;font-size:16px;">${title}</h2>
+      <div class="modal-body">${bodyHtml}</div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="modal-confirm">Confirm</button>
+      </div>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+    document.getElementById("modal-cancel").addEventListener("click", () => overlay.remove());
+    document.getElementById("modal-confirm").addEventListener("click", () => {
+      onConfirm();
+      overlay.remove();
+    });
   }
 
   // ── Status Flash ───────────────────────────────────────────────────
@@ -233,17 +262,7 @@
 
   // ── Event Listeners ────────────────────────────────────────────────
   document.getElementById("add-journal").addEventListener("click", addJournal);
-  document.getElementById("export-btn").addEventListener("click", exportJournals);
-  document.getElementById("import-btn").addEventListener("click", () => importFile.click());
-  importFile.addEventListener("change", (e) => {
-    if (e.target.files[0]) importJournals(e.target.files[0]);
-    e.target.value = "";
-  });
-  document.getElementById("reset-btn").addEventListener("click", resetToDefaults);
-  document.getElementById("empty-reset").addEventListener("click", (e) => {
-    e.preventDefault();
-    resetToDefaults();
-  });
+  document.getElementById("delete-inactive-btn").addEventListener("click", deleteInactive);
 
   searchInput.addEventListener("input", () => render(searchInput.value));
 

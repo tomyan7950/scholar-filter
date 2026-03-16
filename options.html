@@ -13,13 +13,10 @@
     <div class="toolbar">
       <button id="add-journal" class="btn btn-primary">+ Add Journal</button>
       <div class="toolbar-right">
-        <button id="import-btn" class="btn btn-secondary">Import JSON</button>
-        <button id="export-btn" class="btn btn-secondary">Export JSON</button>
-        <button id="reset-btn" class="btn btn-danger">Reset to Defaults</button>
+        <button id="delete-inactive-btn" class="btn btn-danger">Delete Inactive</button>
       </div>
     </div>
 
-    <input type="file" id="import-file" accept=".json" style="display:none">
 
     <div class="search-bar">
       <input type="text" id="search-input" placeholder="Search journals...">
@@ -28,6 +25,7 @@
     <table id="journal-table">
       <thead>
         <tr>
+          <th class="col-active">Active</th>
           <th class="col-name">Journal Name</th>
           <th class="col-aliases">Aliases</th>
           <th class="col-actions">Actions</th>
@@ -37,7 +35,7 @@
     </table>
 
     <div id="empty-state" class="empty-state" style="display:none;">
-      No journals in your list. <a href="#" id="empty-reset">Load defaults</a> or add one above.
+      No journals in your list. Add some using the button above, or import a JSON file.
     </div>
 
     <div id="status-msg" class="status-msg" style="display:none;"></div>
