@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scholar Journal Filter — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <h1>Scholar Journal Filter</h1>
+    <p class="subtitle">Manage your journal list</p>
+
+    <div class="toolbar">
+      <button id="add-journal" class="btn btn-primary">+ Add Journal</button>
+      <div class="toolbar-right">
+        <button id="import-btn" class="btn btn-secondary">Import JSON</button>
+        <button id="export-btn" class="btn btn-secondary">Export JSON</button>
+        <button id="reset-btn" class="btn btn-danger">Reset to Defaults</button>
+      </div>
+    </div>
+
+    <input type="file" id="import-file" accept=".json" style="display:none">
+
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search journals...">
+    </div>
+
+    <table id="journal-table">
+      <thead>
+        <tr>
+          <th class="col-name">Journal Name</th>
+          <th class="col-aliases">Aliases</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="journal-tbody"></tbody>
+    </table>
+
+    <div id="empty-state" class="empty-state" style="display:none;">
+      No journals in your list. <a href="#" id="empty-reset">Load defaults</a> or add one above.
+    </div>
+
+    <div id="status-msg" class="status-msg" style="display:none;"></div>
+  </div>
+
+  <script src="defaults.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

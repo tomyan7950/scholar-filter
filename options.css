@@ -1,0 +1,207 @@
+/* Scholar Journal Filter — Options Page Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #f9f9f9;
+  padding: 20px;
+}
+
+.options-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+/* ── Toolbar ────────────────────────────────── */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.toolbar-right {
+  display: flex;
+  gap: 6px;
+}
+
+.btn {
+  padding: 7px 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary {
+  background: #2e7d32;
+  color: #fff;
+  border-color: #2e7d32;
+}
+
+.btn-primary:hover { background: #256b29; }
+
+.btn-secondary {
+  background: #fff;
+  color: #333;
+}
+
+.btn-secondary:hover { background: #f0f0f0; }
+
+.btn-danger {
+  background: #fff;
+  color: #c62828;
+  border-color: #e57373;
+}
+
+.btn-danger:hover { background: #ffebee; }
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+/* ── Search Bar ─────────────────────────────── */
+.search-bar {
+  margin-bottom: 12px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+}
+
+.search-bar input:focus {
+  border-color: #2e7d32;
+}
+
+/* ── Table ──────────────────────────────────── */
+#journal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+#journal-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.col-name { width: 35%; }
+.col-aliases { width: 45%; }
+.col-actions { width: 20%; text-align: right !important; }
+
+#journal-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+
+#journal-table tr:hover {
+  background: #fafafa;
+}
+
+.alias-list {
+  font-size: 12px;
+  color: #666;
+}
+
+.alias-tag {
+  display: inline-block;
+  background: #f0f0f0;
+  border-radius: 3px;
+  padding: 2px 6px;
+  margin: 1px 3px 1px 0;
+  font-size: 11px;
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.actions-cell .btn {
+  margin-left: 4px;
+}
+
+/* ── Inline Edit ────────────────────────────── */
+.edit-name-input,
+.edit-aliases-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #2e7d32;
+  border-radius: 3px;
+  font-size: 13px;
+  outline: none;
+}
+
+/* ── Empty State ────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+  font-size: 14px;
+}
+
+.empty-state a {
+  color: #2e7d32;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Status Message ─────────────────────────── */
+.status-msg {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.status-msg.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.status-msg.error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #e57373;
+}

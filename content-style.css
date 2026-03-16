@@ -1,0 +1,164 @@
+/* Scholar Journal Filter — Content Styles */
+
+/* Highlight mode: matching results get a green left border */
+.sjf-match {
+  border-left: 4px solid #2e7d32 !important;
+  padding-left: 12px !important;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+
+/* Dim mode: non-matching or non-journal items at 50% opacity */
+.sjf-dim {
+  opacity: 0.5 !important;
+  transition: opacity 0.2s;
+}
+
+/* Restore opacity on hover so dimmed items remain readable */
+.sjf-dim:hover {
+  opacity: 0.85 !important;
+}
+
+/* Hide mode */
+.sjf-hide {
+  display: none !important;
+}
+
+/* Safety / warning banner */
+.sjf-banner {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 8px 0 12px 0;
+  font-size: 13px;
+  color: #664d03;
+  line-height: 1.5;
+}
+
+.sjf-banner a {
+  color: #0d6efd;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.sjf-banner a:hover {
+  color: #0a58ca;
+}
+
+/* ── Selection Checkboxes ───────────────────── */
+.sjf-checkbox-wrap {
+  position: absolute;
+  top: 8px;
+  left: -28px;
+  z-index: 10;
+}
+
+.sjf-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #2e7d32;
+}
+
+/* Make result containers position-relative so checkbox can be positioned */
+.gs_r.gs_or.gs_scl,
+.gs_r.gs_or {
+  position: relative !important;
+}
+
+.sjf-selected {
+  background: #e8f5e9 !important;
+}
+
+/* ── Floating Export Toolbar ────────────────── */
+.sjf-export-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: #1a1a1a;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(100%);
+  transition: transform 0.2s ease;
+}
+
+.sjf-export-bar.sjf-visible {
+  transform: translateY(0);
+}
+
+.sjf-export-bar .sjf-count {
+  color: #a5d6a7;
+  font-weight: 600;
+}
+
+.sjf-export-bar button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.sjf-export-btn {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.sjf-export-btn:hover {
+  background: #256b29;
+}
+
+.sjf-export-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.sjf-export-enrich-btn {
+  background: #1565c0;
+  color: #fff;
+}
+
+.sjf-export-enrich-btn:hover {
+  background: #0d47a1;
+}
+
+.sjf-export-enrich-btn:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+.sjf-clear-btn {
+  background: transparent;
+  color: #aaa;
+  border: 1px solid #555 !important;
+}
+
+.sjf-clear-btn:hover {
+  color: #fff;
+  border-color: #888 !important;
+}
+
+.sjf-select-all-btn {
+  background: transparent;
+  color: #a5d6a7;
+  border: 1px solid #4caf50 !important;
+}
+
+.sjf-select-all-btn:hover {
+  background: rgba(46, 125, 50, 0.2);
+}
+
+.sjf-export-progress {
+  color: #ffd54f;
+  font-size: 13px;
+}

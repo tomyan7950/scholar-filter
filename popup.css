@@ -1,0 +1,181 @@
+/* Scholar Journal Filter — Popup Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: #1a1a1a;
+  width: 300px;
+}
+
+.popup-container {
+  padding: 14px;
+}
+
+/* ── Header ─────────────────────────────────── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+header h1 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Toggle switch */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #555;
+}
+
+.toggle-row input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-slider {
+  width: 36px;
+  height: 20px;
+  background: #ccc;
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggle-slider::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggle-row input:checked + .toggle-slider {
+  background: #2e7d32;
+}
+
+.toggle-row input:checked + .toggle-slider::after {
+  transform: translateX(16px);
+}
+
+/* ── First-Run Banner ───────────────────────── */
+.first-run-banner {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #2e7d32;
+  line-height: 1.4;
+}
+
+.first-run-banner a {
+  color: #1b5e20;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ── Stats Bar ──────────────────────────────── */
+.stats-bar {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: #555;
+  text-align: center;
+}
+
+/* ── Controls ───────────────────────────────── */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.control-group > label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.button-group {
+  display: flex;
+  gap: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 6px 8px;
+  border: none;
+  background: #fff;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-right: 1px solid #ddd;
+}
+
+.button-group button:last-child {
+  border-right: none;
+}
+
+.button-group button.active {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.button-group button:hover:not(.active) {
+  background: #f0f0f0;
+}
+
+/* ── Footer ─────────────────────────────────── */
+footer {
+  margin-top: 12px;
+  text-align: center;
+}
+
+footer a {
+  font-size: 12px;
+  color: #1976d2;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Disabled state ─────────────────────────── */
+.popup-container.disabled .controls,
+.popup-container.disabled .stats-bar,
+.popup-container.disabled .first-run-banner {
+  opacity: 0.4;
+  pointer-events: none;
+}
