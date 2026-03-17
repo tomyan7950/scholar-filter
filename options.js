@@ -12,12 +12,18 @@
 
   // ── Load & Render ──────────────────────────────────────────────────
   async function load() {
-    const stored = await chrome.storage.local.get("journals");
+    const stored = await chrome.storage.local.get(["journals", "firstRun"]);
     journals = stored.journals || [];
     // Ensure all journals have an enabled field
     journals.forEach((j) => { if (j.enabled === undefined) j.enabled = true; });
     sortJournals();
     render();
+
+    // First run: auto-show category picker
+    if (stored.firstRun) {
+      chrome.storage.local.set({ firstRun: false });
+      showCategoryPicker();
+    }
   }
 
   function render(filter = "") {
@@ -213,10 +219,123 @@
 
 
   function resetToDefaults() {
-    if (!confirm("Replace your journal list with the built-in defaults? This cannot be undone.")) return;
-    journals = DEFAULT_JOURNALS.map((j) => ({ ...j, enabled: true }));
+    showCategoryPicker();
+  }
+
+  function deactivateAll() {
+    if (journals.length === 0) {
+      showStatus("No journals to deactivate", "error");
+      return;
+    }
+    const active = journals.filter((j) => j.enabled !== false);
+    if (active.length === 0) {
+      showStatus("All journals are already inactive", "error");
+      return;
+    }
+    if (!confirm(`Deactivate all ${active.length} active journal${active.length !== 1 ? "s" : ""}?`)) return;
+    journals.forEach((j) => { j.enabled = false; });
     save();
-    showStatus(`Reset to ${journals.length} default journals`, "success");
+    showStatus(`Deactivated ${active.length} journal${active.length !== 1 ? "s" : ""}`, "success");
+  }
+
+  function showCategoryPicker() {
+    // Build category sections from DEFAULT_CATEGORIES and DEFAULT_JOURNALS
+    let idx = 0;
+    const categories = DEFAULT_CATEGORIES.map((cat) => {
+      const catJournals = DEFAULT_JOURNALS.slice(idx, idx + cat.count);
+      idx += cat.count;
+      return { name: cat.name, journals: catJournals };
+    });
+
+    // Build HTML using DOM (safe — no innerHTML with user data)
+    const container = document.createElement("div");
+
+    const desc = document.createElement("p");
+    desc.style.cssText = "margin-bottom:12px;color:#666;font-size:13px;";
+    desc.textContent = "Select categories to load. This replaces your current journal list.";
+    container.appendChild(desc);
+
+    // Select All / Select None row
+    const toggleRow = document.createElement("div");
+    toggleRow.style.cssText = "margin-bottom:10px;display:flex;gap:12px;";
+    const selectAllLink = document.createElement("a");
+    selectAllLink.href = "#";
+    selectAllLink.textContent = "Select All";
+    selectAllLink.style.cssText = "font-size:12px;color:#2e7d32;cursor:pointer;";
+    const selectNoneLink = document.createElement("a");
+    selectNoneLink.href = "#";
+    selectNoneLink.textContent = "Select None";
+    selectNoneLink.style.cssText = "font-size:12px;color:#c62828;cursor:pointer;";
+    toggleRow.appendChild(selectAllLink);
+    toggleRow.appendChild(selectNoneLink);
+    container.appendChild(toggleRow);
+
+    const checkboxes = [];
+
+    categories.forEach((cat) => {
+      const section = document.createElement("div");
+      section.style.cssText = "margin-bottom:10px;";
+
+      // Category checkbox + label
+      const catLabel = document.createElement("label");
+      catLabel.style.cssText = "display:flex;align-items:center;gap:6px;font-weight:600;font-size:13px;cursor:pointer;padding:4px 0;";
+      const catCb = document.createElement("input");
+      catCb.type = "checkbox";
+      catCb.checked = true;
+      catCb.style.cssText = "accent-color:#2e7d32;";
+      checkboxes.push(catCb);
+      catLabel.appendChild(catCb);
+      catLabel.appendChild(document.createTextNode(`${cat.name} (${cat.journals.length})`));
+      section.appendChild(catLabel);
+
+      // Journal names (collapsed list)
+      const journalList = document.createElement("div");
+      journalList.style.cssText = "margin-left:24px;font-size:12px;color:#888;line-height:1.6;";
+      journalList.textContent = cat.journals.map((j) => j.name).join(", ");
+      section.appendChild(journalList);
+
+      container.appendChild(section);
+    });
+
+    selectAllLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      checkboxes.forEach((cb) => { cb.checked = true; });
+    });
+    selectNoneLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      checkboxes.forEach((cb) => { cb.checked = false; });
+    });
+
+    // Use showModal with the container's innerHTML
+    showModal("Choose Default Journals", container.innerHTML, () => {
+      // Read which categories are checked from the live modal DOM
+      const modal = document.querySelector(".modal-box");
+      const liveCbs = modal.querySelectorAll('input[type="checkbox"]');
+      const selected = [];
+      categories.forEach((cat, i) => {
+        if (liveCbs[i] && liveCbs[i].checked) {
+          selected.push(...cat.journals);
+        }
+      });
+      journals = selected.map((j) => ({ ...j, enabled: true }));
+      save();
+      showStatus(`Loaded ${journals.length} journals from ${Array.from(liveCbs).filter((cb) => cb.checked).length} categories`, "success");
+    });
+
+    // Re-attach Select All / Select None after innerHTML was set
+    setTimeout(() => {
+      const modal = document.querySelector(".modal-box");
+      if (!modal) return;
+      const links = modal.querySelectorAll("a");
+      const cbs = modal.querySelectorAll('input[type="checkbox"]');
+      links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const selectAll = link.textContent === "Select All";
+          cbs.forEach((cb) => { cb.checked = selectAll; });
+        });
+      });
+    }, 0);
   }
 
   function deleteInactive() {
@@ -276,6 +395,7 @@
   document.getElementById("add-journal").addEventListener("click", addJournal);
   document.getElementById("delete-inactive-btn").addEventListener("click", deleteInactive);
   document.getElementById("reset-defaults-btn").addEventListener("click", resetToDefaults);
+  document.getElementById("deactivate-all-btn").addEventListener("click", deactivateAll);
 
   searchInput.addEventListener("input", () => render(searchInput.value));
 

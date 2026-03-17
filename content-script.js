@@ -327,14 +327,14 @@
 
     const stored = await chrome.storage.local.get(null);
 
-    // First run: populate with defaults
+    // First run: set empty list and flag for category picker on options page
     if (!stored.journals) {
       const defaults = {
         enabled: true,
         filterMode: "whitelist",
         displayMode: "highlight",
         nonJournalItems: "show",
-        journals: DEFAULT_JOURNALS.map((j) => ({ ...j, enabled: true })),
+        journals: [],
         firstRun: true,
       };
       await chrome.storage.local.set(defaults);

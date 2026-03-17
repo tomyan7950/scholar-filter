@@ -91,15 +91,16 @@ This is useful for catching influential papers published in journals outside you
 
 ### Default Journal List
 
-The extension ships with a curated journal list across five categories:
+The extension ships with 82 journals across six categories, selectable at first run:
 
 | Category | Journals |
 |----------|----------|
-| Management | Academy of Management Journal, Academy of Management Review, Administrative Science Quarterly, Strategic Management Journal, Management Science, Organization Science, Journal of Management, Journal of Management Studies, Journal of International Business Studies, Journal of Applied Psychology, Organizational Behavior and Human Decision Processes, Personnel Psychology, Journal of Organizational Behavior, Human Resource Management, The Leadership Quarterly, Research in Organizational Behavior, Organizational Psychology Review, Journal of Business Venturing, Journal of Business Ethics, Human Relations, Organization Studies |
+| Management — Micro & Macro | Academy of Management Journal, Academy of Management Review, Administrative Science Quarterly, Strategic Management Journal, Management Science, Organization Science, Journal of Management, Journal of Management Studies, Journal of International Business Studies, Journal of Applied Psychology, Organizational Behavior and Human Decision Processes, Personnel Psychology, Journal of Organizational Behavior, Human Resource Management, The Leadership Quarterly, Research in Organizational Behavior, Organizational Psychology Review, Journal of Business Venturing, Journal of Business Ethics, Human Relations, Organization Studies |
 | Psychology | Psychological Bulletin, Psychological Review, Journal of Personality and Social Psychology, Psychological Science, Journal of Experimental Psychology: General, American Psychologist, Perspectives on Psychological Science, Journal of Experimental Social Psychology, Personality and Social Psychology Bulletin, Personality and Social Psychology Review |
 | Sociology | American Sociological Review, American Journal of Sociology, Social Forces, Social Networks, Annual Review of Sociology, European Sociological Review |
 | Reviews & Annual Reviews | Annual Review of Psychology, Annual Review of Organizational Psychology and Organizational Behavior, Academy of Management Annals, Research in Personnel and Human Resources Management, International Review of Industrial and Organizational Psychology |
 | General Science | Nature, Science, Nature Human Behaviour, Nature Communications, Proceedings of the National Academy of Sciences, Science Advances |
+| FT 50 (Additional) | Accounting Organizations and Society, American Economic Review, Contemporary Accounting Research, Econometrica, Entrepreneurship Theory and Practice, Harvard Business Review, Information Systems Research, Journal of Accounting and Economics, Journal of Accounting Research, Journal of Consumer Psychology, Journal of Consumer Research, Journal of Finance, Journal of Financial and Quantitative Analysis, Journal of Financial Economics, Journal of Management Information Systems, Journal of Marketing, Journal of Marketing Research, Journal of Operations Management, Journal of Political Economy, Journal of the Academy of Marketing Science, Manufacturing and Service Operations Management, Marketing Science, MIS Quarterly, Operations Research, Production and Operations Management, Quarterly Journal of Economics, Research Policy, Review of Accounting Studies, Review of Economic Studies, Review of Finance, Review of Financial Studies, Sloan Management Review, Strategic Entrepreneurship Journal, The Accounting Review |
 
 You can customize this list at any time through the options page.
 
@@ -121,11 +122,17 @@ You can customize this list at any time through the options page.
 
 ## Changelog
 
+### v0.4 — 2026-03-17
+- **Category picker**: First-run and "Reset to Defaults" now show a category selection modal — choose which journal groups to load instead of getting everything
+- **FT 50 journals**: Added 34 Financial Times top 50 journals as a selectable category
+- **Deactivate All**: New button to deactivate all journals at once, then selectively delete via "Delete Inactive"
+- Management categories merged into "Management — Micro & Macro"
+
 ### v0.3 — 2026-03-17
 - **Highly Cited badge**: Optional gold badge on papers above a configurable citation threshold (default 500). Highly cited papers stay visible even if their journal isn't in your list.
 - **Reset to Defaults**: One-click button on the options page to restore the built-in journal list
 - **Export format**: Changed from .xls to .xml — opens directly in Excel with no format warning
-- **Bug fixes**: Edit mode no longer breaks the active toggle column; editing an inactive journal no longer reactivates it; fixed a self-XSS in the search filter
+- **Bug fixes**: Edit mode no longer breaks the active toggle column; editing an inactive journal no longer reactivates it
 
 ### v0.2 — 2026-03-16
 - Active/inactive toggles per journal
