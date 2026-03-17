@@ -2,21 +2,13 @@
 
 A Chrome extension that filters Google Scholar search results by journal. Highlight, dim, or hide results based on a customizable journal list — so you only see papers from outlets relevant to your field.
 
-Built for academic researchers who are tired of scrolling past transportation, engineering, and math papers when searching for management or psychology research.
-
 ## Features
 
-- **Three display modes**: Highlight matching journals (green border), dim non-matching results, or hide them entirely
-- **Whitelist or blacklist**: Show only target journals, or exclude specific ones
-- **49 pre-loaded journals**: Ships with a default list covering management, psychology, sociology, reviews, and general science outlets
-- **Customizable journal list**: Add, remove, or edit journals and their aliases through the options page
-- **Reset to defaults**: One-click button to restore the built-in journal list
-- **Right-click to add**: Right-click any Scholar result to instantly add its journal to your list
-- **Non-journal item control**: Separately show, dim, or hide books, theses, and working papers
-- **Highly Cited badge**: Optional gold "Highly Cited" badge on papers above a configurable citation threshold (default 500). Papers not in your journal list but highly cited stay visible instead of being dimmed or hidden — so you never miss important work outside your filtered journals
-- **Paper selection and export**: Select individual papers with checkboxes, then export to Excel (.xml format, opens directly in Excel)
-- **Abstract retrieval**: Optionally fetch full abstracts from OpenAlex (free, no API key needed)
-- **Works across Scholar domains**: Supports 34 Google Scholar country domains (.com, .co.uk, .de, etc.)
+- **Pre-loaded journal list**: Ships with a curated default list covering management, psychology, sociology, reviews, and general science outlets
+- **Customizable journal list**: Add, edit, or remove journals and aliases through the options page or right-click any Scholar result to add its journal instantly
+- **Display modes**: Highlight matching journals (green border), dim non-matching results, or hide them entirely. Whitelist or blacklist. Non-journal items (books, theses, working papers) can be independently shown, dimmed, or hidden
+- **Highly Cited badge**: Optional gold badge on papers above a configurable citation threshold (default 500). Papers not in your journal list but highly cited stay visible instead of being dimmed or hidden — so you never miss important work outside your filtered journals
+- **Batch export for literature review**: Select papers with checkboxes across multiple pages, then export to Excel with title, authors, journal, year, and citation count. Optionally enrich with full abstracts and DOIs via OpenAlex (free, no API key)
 
 ## Installation
 
@@ -63,15 +55,14 @@ Books, theses, working papers, and patents often don't have a recognizable journ
 
 ### Adding Journals
 
-**Option A — Right-click**: Right-click any search result on Google Scholar. If the extension detected a journal name, you'll see "Add [Journal Name] to filter list" in the context menu. One click adds it.
-
-**Option B — Options page**: Click the extension icon, then click **Manage journal list** to open the full options page. Here you can:
+**Option A — Options page**: Click the extension icon, then click **Manage journal list** to open the full options page. Here you can:
 - Add journals manually (with aliases)
 - Edit existing journal names and aliases
 - Delete journals
 - Search/filter your list
-- Import or export your list as JSON (for sharing or backup)
 - Reset to the default list
+
+**Option B — Right-click**: Right-click any search result on Google Scholar. If the extension detected a journal name, you'll see "Add [Journal Name] to filter list" in the context menu. One click adds it.
 
 ### Aliases
 
@@ -100,16 +91,15 @@ This is useful for catching influential papers published in journals outside you
 
 ### Default Journal List
 
-The extension ships with 49 journals across six categories:
+The extension ships with a curated journal list across five categories:
 
 | Category | Journals |
 |----------|----------|
-| Management — Strategy & General | AMJ, AMR, ASQ, SMJ, Management Science, Organization Science, JOM, JMS, JIBS |
-| Management — OB/HR/Micro | JAP, OBHDP, Personnel Psychology, JOB, HRM, Leadership Quarterly, ROB, OPR, JBV, JBE, Human Relations, Organization Studies |
-| Psychology — General & Social | Psychological Bulletin, Psychological Review, JPSP, Psychological Science, JEP: General, American Psychologist, PPS, JESP, PSPB, PSPR |
-| Sociology | ASR, AJS, Social Forces, Social Networks, Annual Review of Sociology, European Sociological Review |
-| Reviews & Annual Reviews | Annual Review of Psychology, AROPOB, Academy of Management Annals, RPHRM, IRIOP |
-| General Science | Nature, Science, Nature Human Behaviour, Nature Communications, PNAS, Science Advances |
+| Management | Academy of Management Journal, Academy of Management Review, Administrative Science Quarterly, Strategic Management Journal, Management Science, Organization Science, Journal of Management, Journal of Management Studies, Journal of International Business Studies, Journal of Applied Psychology, Organizational Behavior and Human Decision Processes, Personnel Psychology, Journal of Organizational Behavior, Human Resource Management, The Leadership Quarterly, Research in Organizational Behavior, Organizational Psychology Review, Journal of Business Venturing, Journal of Business Ethics, Human Relations, Organization Studies |
+| Psychology | Psychological Bulletin, Psychological Review, Journal of Personality and Social Psychology, Psychological Science, Journal of Experimental Psychology: General, American Psychologist, Perspectives on Psychological Science, Journal of Experimental Social Psychology, Personality and Social Psychology Bulletin, Personality and Social Psychology Review |
+| Sociology | American Sociological Review, American Journal of Sociology, Social Forces, Social Networks, Annual Review of Sociology, European Sociological Review |
+| Reviews & Annual Reviews | Annual Review of Psychology, Annual Review of Organizational Psychology and Organizational Behavior, Academy of Management Annals, Research in Personnel and Human Resources Management, International Review of Industrial and Organizational Psychology |
+| General Science | Nature, Science, Nature Human Behaviour, Nature Communications, Proceedings of the National Academy of Sciences, Science Advances |
 
 You can customize this list at any time through the options page.
 
