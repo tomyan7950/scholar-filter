@@ -8,11 +8,13 @@ Built for academic researchers who are tired of scrolling past transportation, e
 
 - **Three display modes**: Highlight matching journals (green border), dim non-matching results, or hide them entirely
 - **Whitelist or blacklist**: Show only target journals, or exclude specific ones
-- **50 pre-loaded journals**: Ships with a default list covering management, psychology, sociology, reviews, and general science outlets
+- **49 pre-loaded journals**: Ships with a default list covering management, psychology, sociology, reviews, and general science outlets
 - **Customizable journal list**: Add, remove, or edit journals and their aliases through the options page
+- **Reset to defaults**: One-click button to restore the built-in journal list
 - **Right-click to add**: Right-click any Scholar result to instantly add its journal to your list
 - **Non-journal item control**: Separately show, dim, or hide books, theses, and working papers
-- **Paper selection and export**: Select individual papers with checkboxes, then export to Excel
+- **Highly Cited badge**: Optional gold "Highly Cited" badge on papers above a configurable citation threshold (default 500). Papers not in your journal list but highly cited stay visible instead of being dimmed or hidden — so you never miss important work outside your filtered journals
+- **Paper selection and export**: Select individual papers with checkboxes, then export to Excel (.xml format, opens directly in Excel)
 - **Abstract retrieval**: Optionally fetch full abstracts from OpenAlex (free, no API key needed)
 - **Works across Scholar domains**: Supports 34 Google Scholar country domains (.com, .co.uk, .de, etc.)
 
@@ -82,12 +84,23 @@ Each journal in your list can have multiple aliases. The default list includes c
 1. **Select papers**: Check the checkbox that appears to the left of each search result
 2. **Navigate pages**: Your selections persist as you move between Scholar pages
 3. **Select all matched**: Click "Select all matched" in the bottom toolbar to check every highlighted result on the current page
-4. **Export**: Click **Export CSV** to download an Excel file with title, authors, journal, year, citation count, and PDF availability
+4. **Export**: Click **Export Excel** to download an Excel-compatible XML file with title, authors, journal, year, citation count, and PDF availability
 5. **Get abstracts**: Click **Get Abstracts (OpenAlex)** to enrich the export with full abstracts, DOIs, and URLs via the free OpenAlex API. This makes one API call per paper and takes a few seconds.
+
+### Highly Cited Badge
+
+This optional feature highlights papers with high citation counts, regardless of whether their journal is in your list. Toggle it on in the popup and set your preferred citation threshold (default: 500).
+
+When enabled:
+- **Matched journal + highly cited**: Green border and gold "Highly Cited" badge
+- **Not in your list + highly cited**: No green border, but the paper stays visible with the badge — overriding dim or hide mode
+- **Not highly cited**: Normal filtering behavior applies
+
+This is useful for catching influential papers published in journals outside your usual filter list.
 
 ### Default Journal List
 
-The extension ships with 50 journals across six categories:
+The extension ships with 49 journals across six categories:
 
 | Category | Journals |
 |----------|----------|
@@ -96,7 +109,7 @@ The extension ships with 50 journals across six categories:
 | Psychology — General & Social | Psychological Bulletin, Psychological Review, JPSP, Psychological Science, JEP: General, American Psychologist, PPS, JESP, PSPB, PSPR |
 | Sociology | ASR, AJS, Social Forces, Social Networks, Annual Review of Sociology, European Sociological Review |
 | Reviews & Annual Reviews | Annual Review of Psychology, AROPOB, Academy of Management Annals, RPHRM, IRIOP |
-| General Science | Nature, Science, Nature Human Behaviour, Nature Communications, PNAS, Science Advances, PLOS ONE |
+| General Science | Nature, Science, Nature Human Behaviour, Nature Communications, PNAS, Science Advances |
 
 You can customize this list at any time through the options page.
 

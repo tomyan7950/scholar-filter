@@ -11,9 +11,11 @@
     displayMode: "highlight",
     nonJournalItems: "show",
     journals: [],
+    highlyCitedEnabled: false,
+    highlyCitedThreshold: 500,
   };
 
-  let filterStats = { total: 0, matched: 0, nonJournal: 0 };
+  let filterStats = { total: 0, matched: 0, nonJournal: 0, highlyCited: 0 };
   let isFiltering = false;
 
   // ── Journal Extraction ─────────────────────────────────────────────
@@ -136,12 +138,35 @@
     return extractedName;
   }
 
+  // ── Citation Helpers ────────────────────────────────────────────────
+  function extractCitationCount(resultEl) {
+    const citedByLink = resultEl.querySelector('a[href*="cites="]');
+    if (!citedByLink) return 0;
+    const match = citedByLink.textContent.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  }
+
+  function removeHighlyCitedBadges() {
+    document.querySelectorAll(".sjf-highly-cited-badge").forEach((el) => el.remove());
+  }
+
+  function injectHighlyCitedBadge(resultEl) {
+    if (resultEl.querySelector(".sjf-highly-cited-badge")) return;
+    const gsaEl = resultEl.querySelector(".gs_a");
+    if (!gsaEl) return;
+    const badge = document.createElement("span");
+    badge.className = "sjf-highly-cited-badge";
+    badge.textContent = "Highly Cited";
+    gsaEl.appendChild(badge);
+  }
+
   // ── DOM Filtering ──────────────────────────────────────────────────
   function clearFiltering() {
     document.querySelectorAll(".gs_r.gs_or.gs_scl, .gs_r.gs_or").forEach((el) => {
-      el.classList.remove("sjf-match", "sjf-no-match", "sjf-non-journal", "sjf-dim", "sjf-hide");
+      el.classList.remove("sjf-match", "sjf-no-match", "sjf-non-journal", "sjf-dim", "sjf-hide", "sjf-highly-cited");
     });
     removeBanners();
+    removeHighlyCitedBadges();
   }
 
   function removeBanners() {
@@ -190,13 +215,17 @@
       return;
     }
 
-    filterStats = { total: results.length, matched: 0, nonJournal: 0 };
+    filterStats = { total: results.length, matched: 0, nonJournal: 0, highlyCited: 0 };
     const activeJournals = settings.journals.filter((j) => j.enabled !== false);
     let trulyUnparseable = 0;
 
     results.forEach((result) => {
       const gsaEl = result.querySelector(".gs_a");
       const journal = extractJournal(gsaEl);
+
+      // Check highly-cited status
+      const citationCount = settings.highlyCitedEnabled ? extractCitationCount(result) : 0;
+      const isHighlyCited = settings.highlyCitedEnabled && citationCount >= settings.highlyCitedThreshold;
 
       if (!journal) {
         filterStats.nonJournal++;
@@ -205,7 +234,12 @@
           trulyUnparseable++;
         }
         result.classList.add("sjf-non-journal");
-        if (settings.nonJournalItems === "dim") {
+
+        if (isHighlyCited) {
+          result.classList.add("sjf-highly-cited");
+          injectHighlyCitedBadge(result);
+          filterStats.highlyCited++;
+        } else if (settings.nonJournalItems === "dim") {
           result.classList.add("sjf-dim");
         } else if (settings.nonJournalItems === "hide") {
           result.classList.add("sjf-hide");
@@ -222,9 +256,19 @@
       if (inList) {
         result.classList.add("sjf-match");
         filterStats.matched++;
+        if (isHighlyCited) {
+          result.classList.add("sjf-highly-cited");
+          injectHighlyCitedBadge(result);
+          filterStats.highlyCited++;
+        }
       } else {
         result.classList.add("sjf-no-match");
-        if (settings.displayMode === "dim") {
+        if (isHighlyCited) {
+          // Not in journal list but highly cited — override dim/hide, show with badge
+          result.classList.add("sjf-highly-cited");
+          injectHighlyCitedBadge(result);
+          filterStats.highlyCited++;
+        } else if (settings.displayMode === "dim") {
           result.classList.add("sjf-dim");
         } else if (settings.displayMode === "hide") {
           result.classList.add("sjf-hide");
@@ -234,7 +278,7 @@
 
     // Safety rail: if all journal results would be hidden, switch to dim
     const journalResults = filterStats.total - filterStats.nonJournal;
-    if (settings.displayMode === "hide" && filterStats.matched === 0 && journalResults > 0) {
+    if (settings.displayMode === "hide" && filterStats.matched === 0 && filterStats.highlyCited === 0 && journalResults > 0) {
       results.forEach((result) => {
         if (result.classList.contains("sjf-no-match")) {
           result.classList.remove("sjf-hide");
@@ -301,6 +345,8 @@
       settings.displayMode = stored.displayMode || "highlight";
       settings.nonJournalItems = stored.nonJournalItems || "show";
       settings.journals = stored.journals || [];
+      settings.highlyCitedEnabled = stored.highlyCitedEnabled || false;
+      settings.highlyCitedThreshold = stored.highlyCitedThreshold || 500;
     }
 
     await loadSelections();
@@ -442,7 +488,7 @@
     exportBar.innerHTML = `
       <span><span class="sjf-count">0</span> papers selected</span>
       <button class="sjf-select-all-btn">Select all matched</button>
-      <button class="sjf-export-btn" data-mode="scholar">Export CSV</button>
+      <button class="sjf-export-btn" data-mode="scholar">Export Excel</button>
       <button class="sjf-export-enrich-btn" data-mode="openalex">Get Abstracts (OpenAlex)</button>
       <button class="sjf-clear-btn">Clear</button>
       <span class="sjf-export-progress"></span>
@@ -552,7 +598,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `scholar-export-${new Date().toISOString().slice(0, 10)}.xls`;
+    a.download = `scholar-export-${new Date().toISOString().slice(0, 10)}.xml`;
     a.click();
     URL.revokeObjectURL(url);
   }

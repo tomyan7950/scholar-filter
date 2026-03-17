@@ -37,7 +37,11 @@
       if (norm && journals.length > 0) {
         // Show "no match" inline
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="4" style="text-align:center;color:#888;padding:20px;">No journals match "${filter}"</td>`;
+        const td = document.createElement("td");
+        td.colSpan = 4;
+        td.style.cssText = "text-align:center;color:#888;padding:20px;";
+        td.textContent = `No journals match "${filter}"`;
+        tr.appendChild(td);
         tbody.appendChild(tr);
       }
       return;
@@ -156,23 +160,23 @@
     const journal = journals[index];
     const cells = tr.children;
 
-    // Replace name cell with input
-    cells[0].innerHTML = "";
+    // Replace name cell with input (cells[1] — after active toggle at cells[0])
+    cells[1].innerHTML = "";
     const nameInput = document.createElement("input");
     nameInput.className = "edit-name-input";
     nameInput.value = journal.name;
-    cells[0].appendChild(nameInput);
+    cells[1].appendChild(nameInput);
 
     // Replace aliases cell with input
-    cells[1].innerHTML = "";
+    cells[2].innerHTML = "";
     const aliasInput = document.createElement("input");
     aliasInput.className = "edit-aliases-input";
     aliasInput.value = (journal.aliases || []).join(", ");
     aliasInput.placeholder = "Comma-separated aliases";
-    cells[1].appendChild(aliasInput);
+    cells[2].appendChild(aliasInput);
 
     // Replace actions with Save/Cancel
-    cells[2].innerHTML = "";
+    cells[3].innerHTML = "";
 
     const saveBtn = document.createElement("button");
     saveBtn.className = "btn btn-primary btn-sm";
@@ -184,6 +188,7 @@
         return;
       }
       journals[index] = {
+        ...journals[index],
         name: newName,
         aliases: aliasInput.value
           .split(",")
@@ -199,13 +204,20 @@
     cancelBtn.textContent = "Cancel";
     cancelBtn.addEventListener("click", () => render(searchInput.value));
 
-    cells[2].appendChild(saveBtn);
-    cells[2].appendChild(cancelBtn);
+    cells[3].appendChild(saveBtn);
+    cells[3].appendChild(cancelBtn);
 
     nameInput.focus();
     nameInput.select();
   }
 
+
+  function resetToDefaults() {
+    if (!confirm("Replace your journal list with the built-in defaults? This cannot be undone.")) return;
+    journals = DEFAULT_JOURNALS.map((j) => ({ ...j, enabled: true }));
+    save();
+    showStatus(`Reset to ${journals.length} default journals`, "success");
+  }
 
   function deleteInactive() {
     const inactive = journals.filter((j) => j.enabled === false);
@@ -263,6 +275,7 @@
   // ── Event Listeners ────────────────────────────────────────────────
   document.getElementById("add-journal").addEventListener("click", addJournal);
   document.getElementById("delete-inactive-btn").addEventListener("click", deleteInactive);
+  document.getElementById("reset-defaults-btn").addEventListener("click", resetToDefaults);
 
   searchInput.addEventListener("input", () => render(searchInput.value));
 

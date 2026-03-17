@@ -10,6 +10,8 @@
   const journalCount = document.getElementById("journal-count");
   const customizeLink = document.getElementById("customize-link");
   const optionsLink = document.getElementById("options-link");
+  const toggleHighlyCited = document.getElementById("toggle-highly-cited");
+  const highlyCitedThreshold = document.getElementById("highly-cited-threshold");
 
   const buttonGroups = {
     displayMode: document.getElementById("display-mode"),
@@ -30,6 +32,10 @@
     setActiveButton(buttonGroups.displayMode, stored.displayMode || "highlight");
     setActiveButton(buttonGroups.filterMode, stored.filterMode || "whitelist");
     setActiveButton(buttonGroups.nonJournalItems, stored.nonJournalItems || "show");
+
+    // Highly Cited controls
+    toggleHighlyCited.checked = stored.highlyCitedEnabled || false;
+    highlyCitedThreshold.value = stored.highlyCitedThreshold || 500;
 
     // First-run banner
     if (stored.firstRun) {
@@ -57,7 +63,11 @@
     if (stats.total === 0) {
       statsText.textContent = "No results on this page";
     } else {
-      statsText.textContent = `${stats.matched} of ${stats.total} results match your journals`;
+      let text = `${stats.matched} of ${stats.total} results match your journals`;
+      if (stats.highlyCited > 0) {
+        text += ` · ${stats.highlyCited} highly cited`;
+      }
+      statsText.textContent = text;
     }
   }
 
@@ -82,6 +92,17 @@
       setActiveButton(group, btn.dataset.value);
       chrome.storage.local.set({ [storageKey]: btn.dataset.value });
     });
+  });
+
+  toggleHighlyCited.addEventListener("change", () => {
+    chrome.storage.local.set({ highlyCitedEnabled: toggleHighlyCited.checked });
+  });
+
+  highlyCitedThreshold.addEventListener("change", () => {
+    const val = parseInt(highlyCitedThreshold.value, 10);
+    if (val > 0) {
+      chrome.storage.local.set({ highlyCitedThreshold: val });
+    }
   });
 
   customizeLink.addEventListener("click", (e) => {

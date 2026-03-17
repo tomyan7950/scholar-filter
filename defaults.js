@@ -8,7 +8,7 @@ const DEFAULT_CATEGORIES = [
   { name: "Psychology — General & Social", count: 10 },
   { name: "Sociology", count: 6 },
   { name: "Reviews & Annual Reviews", count: 5 },
-  { name: "General Science", count: 7 },
+  { name: "General Science", count: 6 },
 ];
 
 const DEFAULT_JOURNALS = [
@@ -71,5 +71,5 @@ const DEFAULT_JOURNALS = [
   { name: "Nature Communications", aliases: ["Nat Commun"] },
   { name: "Proceedings of the National Academy of Sciences", aliases: ["PNAS", "Proc Natl Acad Sci"] },
   { name: "Science Advances", aliases: ["Sci Adv"] },
-  { name: "PLOS ONE", aliases: ["PLoS ONE", "PLoS One"] },
+
 ];
