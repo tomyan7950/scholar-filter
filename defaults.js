@@ -3,7 +3,7 @@
 
 // Category boundaries for the defaults picker UI
 const DEFAULT_CATEGORIES = [
-  { name: "Management — Micro & Macro", count: 21 },
+  { name: "Management — Micro & Macro", count: 22 },
   { name: "Psychology — General & Social", count: 10 },
   { name: "Sociology", count: 6 },
   { name: "Reviews & Annual Reviews", count: 5 },

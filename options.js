@@ -12,18 +12,12 @@
 
   // ── Load & Render ──────────────────────────────────────────────────
   async function load() {
-    const stored = await chrome.storage.local.get(["journals", "firstRun"]);
+    const stored = await chrome.storage.local.get(["journals"]);
     journals = stored.journals || [];
     // Ensure all journals have an enabled field
     journals.forEach((j) => { if (j.enabled === undefined) j.enabled = true; });
     sortJournals();
     render();
-
-    // First run: auto-show category picker
-    if (stored.firstRun) {
-      chrome.storage.local.set({ firstRun: false });
-      showCategoryPicker();
-    }
   }
 
   function render(filter = "") {

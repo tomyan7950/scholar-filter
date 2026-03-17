@@ -327,15 +327,23 @@
 
     const stored = await chrome.storage.local.get(null);
 
-    // First run: set empty list and flag for category picker on options page
+    // First run: pre-load core categories (everything except FT 50 Additional)
     if (!stored.journals) {
+      const coreCount = DEFAULT_CATEGORIES
+        .filter((c) => c.name !== "FT 50 (Additional)")
+        .reduce((sum, c) => sum + c.count, 0);
+      const starterJournals = DEFAULT_JOURNALS.slice(0, coreCount).map((j) => ({
+        name: j.name,
+        aliases: j.aliases || [],
+        enabled: true,
+      }));
       const defaults = {
         enabled: true,
         filterMode: "whitelist",
         displayMode: "highlight",
         nonJournalItems: "show",
-        journals: [],
-        firstRun: true,
+        journals: starterJournals,
+        starterBannerDismissed: false,
       };
       await chrome.storage.local.set(defaults);
       Object.assign(settings, defaults);

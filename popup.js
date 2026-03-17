@@ -6,9 +6,10 @@
   const toggleEnabled = document.getElementById("toggle-enabled");
   const container = document.querySelector(".popup-container");
   const statsText = document.getElementById("stats-text");
-  const firstRunBanner = document.getElementById("first-run-banner");
-  const journalCount = document.getElementById("journal-count");
+  const starterBanner = document.getElementById("starter-banner");
+  const starterCount = document.getElementById("starter-count");
   const customizeLink = document.getElementById("customize-link");
+  const dismissBanner = document.getElementById("dismiss-banner");
   const optionsLink = document.getElementById("options-link");
   const toggleHighlyCited = document.getElementById("toggle-highly-cited");
   const highlyCitedThreshold = document.getElementById("highly-cited-threshold");
@@ -37,10 +38,10 @@
     toggleHighlyCited.checked = stored.highlyCitedEnabled || false;
     highlyCitedThreshold.value = stored.highlyCitedThreshold || 500;
 
-    // First-run banner
-    if (stored.firstRun) {
-      firstRunBanner.style.display = "block";
-      journalCount.textContent = (stored.journals || []).length;
+    // Starter banner (shown until dismissed)
+    if (!stored.starterBannerDismissed && stored.journals && stored.journals.length > 0) {
+      starterBanner.style.display = "block";
+      starterCount.textContent = stored.journals.length;
     }
 
     // Request stats from content script
@@ -107,8 +108,12 @@
 
   customizeLink.addEventListener("click", (e) => {
     e.preventDefault();
-    chrome.storage.local.set({ firstRun: false });
     chrome.runtime.openOptionsPage();
+  });
+
+  dismissBanner.addEventListener("click", () => {
+    chrome.storage.local.set({ starterBannerDismissed: true });
+    starterBanner.style.display = "none";
   });
 
   optionsLink.addEventListener("click", (e) => {
