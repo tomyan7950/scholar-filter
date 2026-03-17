@@ -129,6 +129,23 @@ You can customize this list at any time through the options page.
 - OpenAlex is a free, open scholarly database. Abstract lookups are anonymous API calls — no account or API key is required.
 - The extension does not track usage, collect analytics, or phone home.
 
+## Changelog
+
+### v0.3 — 2026-03-17
+- **Highly Cited badge**: Optional gold badge on papers above a configurable citation threshold (default 500). Highly cited papers stay visible even if their journal isn't in your list.
+- **Reset to Defaults**: One-click button on the options page to restore the built-in journal list
+- **Export format**: Changed from .xls to .xml — opens directly in Excel with no format warning
+- **Bug fixes**: Edit mode no longer breaks the active toggle column; editing an inactive journal no longer reactivates it; fixed a self-XSS in the search filter
+
+### v0.2 — 2026-03-16
+- Active/inactive toggles per journal
+- Bulk delete inactive journals
+- Alphabetical sorting
+- Bulk add (multiple journals at once)
+
+### v0.1 — 2026-03-16
+- Initial release with highlight/dim/hide filtering, whitelist/blacklist modes, 50 pre-loaded journals, right-click to add, paper selection and export, OpenAlex abstract retrieval
+
 ## License
 
 MIT
