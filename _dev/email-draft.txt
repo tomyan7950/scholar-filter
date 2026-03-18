@@ -1,0 +1,23 @@
+Subject: Feedback request: Chrome extension that filters Google Scholar by journal
+
+Hi [Name],
+
+I built a Chrome extension that filters Google Scholar results by journal. If you have preferred journals for your field, this extension highlights, dims, or hides results accordingly — so you spend less time scanning and more time reading.
+
+Core features:
+- Journal filtering: Whitelist or blacklist journals. Ships with 82 pre-loaded journals across management, psychology, sociology, and the FT 50 — fully customizable, easy to add or remove
+- Highly Cited badge: Optionally flags high-citation papers even outside your journal list, so you don't miss influential work
+- Literature review export: Select papers across pages and batch export to Excel with titles, authors, journals, years, citation counts, and PDF links. Optionally pull full abstracts via OpenAlex. Feed the PDFs directly into tools like NotebookLM for fast synthesis
+
+Ultra-lightweight: no dependencies, no tracking, runs entirely in your browser.
+
+To install (attached ZIP, ~30 seconds):
+1. Unzip the attached file to a folder you'll keep
+2. In Chrome, go to chrome://extensions, toggle Developer mode on (top right), click Load unpacked, select the folder
+3. Click the extension icon → Manage journal list → the category picker will appear automatically. Select the journal categories relevant to your field
+4. Search on Google Scholar — matching journals will be highlighted in green
+
+Any feedback is welcome — even a two-line reply on what works or what's missing.
+
+Best,
+Tom

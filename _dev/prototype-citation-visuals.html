@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Citation Visual Prototypes</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 20px 40px; color: #222; }
+  h1 { font-size: 18px; margin-bottom: 4px; }
+  h2 { font-size: 15px; color: #666; margin: 40px 0 16px; padding-bottom: 6px; border-bottom: 2px solid #eee; }
+  .result {
+    padding: 12px 16px;
+    margin-bottom: 2px;
+    position: relative;
+    border-left: 3px solid transparent;
+  }
+  .result.matched { border-left-color: #2e7d32; background: #f1f8f1; }
+  .result .title { font-size: 16px; color: #1a0dab; text-decoration: none; font-weight: normal; }
+  .result .meta { font-size: 13px; color: #006621; margin: 4px 0; }
+  .result .snippet { font-size: 13px; color: #545454; line-height: 1.4; }
+  .result .links { font-size: 12px; color: #1a0dab; margin-top: 4px; }
+  .result .links span { margin-right: 12px; }
+
+  /* ── Option 1: Citation pill ── */
+  .cite-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 9px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: 0.02em;
+  }
+  .cite-pill.low { background: #e8e8e8; color: #777; }
+  .cite-pill.mid { background: #d6e4f0; color: #2c5f8a; }
+  .cite-pill.high { background: #fff3cd; color: #8a6d00; }
+  .cite-pill.very-high { background: #ffe082; color: #7a5900; }
+
+  /* ── Option 2: Heat bar ── */
+  .heat-bar-container {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: transparent;
+  }
+  .heat-bar {
+    height: 100%;
+    border-radius: 0 2px 2px 0;
+    transition: width 0.3s;
+  }
+
+  /* ── Option 4: Dot constellation ── */
+  .cite-dots {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .cite-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #999;
+  }
+  .cite-dots.mag-1 .cite-dot { background: #ccc; }
+  .cite-dots.mag-2 .cite-dot { background: #aaa; }
+  .cite-dots.mag-3 .cite-dot { background: #e8a735; }
+  .cite-dots.mag-4 .cite-dot { background: #d48800; }
+  .cite-dots.mag-5 .cite-dot { background: #b8860b; }
+
+  .section { margin-bottom: 60px; }
+  .label { font-size: 11px; color: #999; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+
+<h1>Citation Visual Prototypes</h1>
+<p style="color:#666; font-size:13px; margin-bottom: 30px;">Three options shown on the same mock Scholar results. Compare how each communicates citation impact.</p>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div class="section">
+<h2>Option 1 — Color-coded Citation Pill</h2>
+<p class="label">Pill badge after journal name. Gray &lt;50 · Blue &lt;500 · Gold 500+ · Bright gold 2000+</p>
+
+<div class="result matched">
+  <a class="title">Employee voice behavior: Integration and directions for future research</a>
+  <div class="meta">EW Morrison - Academy of Management Annals, 2011 <span class="cite-pill very-high">2,699</span></div>
+  <div class="snippet">… I begin by reviewing the different conceptualizations of <b>employee voice</b> and define clearly the voice construct and clarify how it relates to …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 2699</span><span>Related articles</span></div>
+</div>
+
+<div class="result matched">
+  <a class="title">Speaking up to move up: How voice can enhance or undermine career outcomes</a>
+  <div class="meta">E McClean, S Tangirala - Academy of Management Journal, 2019 <span class="cite-pill mid">187</span></div>
+  <div class="snippet">… We examine how the frequency of employee voice relates to subsequent promotions and find that the relationship depends on …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 187</span><span>Related articles</span></div>
+</div>
+
+<div class="result matched">
+  <a class="title">Team voice and team creativity: The role of team mindfulness</a>
+  <div class="meta">J Guo, J Qiu - Organization Science, 2023 <span class="cite-pill low">23</span></div>
+  <div class="snippet">… We investigate how team-level voice behavior influences team creativity through a field study of 89 R&D teams …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 23</span><span>Related articles</span></div>
+</div>
+
+<div class="result matched">
+  <a class="title">Voice and silence in organizations: A review and integration</a>
+  <div class="meta">LJ Kish-Gephart - Personnel Psychology, 2024 <span class="cite-pill low">4</span></div>
+  <div class="snippet">… We provide a comprehensive review of the voice and silence literature, integrating findings from over two decades …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 4</span><span>Related articles</span></div>
+</div>
+
+<div class="result">
+  <a class="title">Talking up or talking down: The role of cultural values in voice expression</a>
+  <div class="meta">R Chen, L Wang - 2022 - repository.lib.university.edu</div>
+  <div class="snippet">… This dissertation examines cross-cultural differences in employee voice …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Related articles</span></div>
+</div>
+
+<div class="result matched">
+  <a class="title">The voice bystander effect: How information redundancy inhibits voice</a>
+  <div class="meta">J Rhee, A Grant - OBHDP, 2020 <span class="cite-pill high">612</span></div>
+  <div class="snippet">… We draw on bystander research to examine when employees withhold voice even when they recognize problems …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 612</span><span>Related articles</span></div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div class="section">
+<h2>Option 2 — Heat Bar</h2>
+<p class="label">3px bar at bottom edge. Width proportional to page max. Cool→warm gradient.</p>
+
+<div class="result matched" style="padding-bottom:16px;">
+  <a class="title">Employee voice behavior: Integration and directions for future research</a>
+  <div class="meta">EW Morrison - Academy of Management Annals, 2011</div>
+  <div class="snippet">… I begin by reviewing the different conceptualizations of <b>employee voice</b> and define clearly the voice construct and clarify how it relates to …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 2699</span><span>Related articles</span></div>
+  <div class="heat-bar-container"><div class="heat-bar" style="width:100%; background: linear-gradient(90deg, #e8a735, #d45500);"></div></div>
+</div>
+
+<div class="result matched" style="padding-bottom:16px;">
+  <a class="title">Speaking up to move up: How voice can enhance or undermine career outcomes</a>
+  <div class="meta">E McClean, S Tangirala - Academy of Management Journal, 2019</div>
+  <div class="snippet">… We examine how the frequency of employee voice relates to subsequent promotions and find that the relationship depends on …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 187</span><span>Related articles</span></div>
+  <div class="heat-bar-container"><div class="heat-bar" style="width:22%; background: linear-gradient(90deg, #7bafd4, #3a7fc1);"></div></div>
+</div>
+
+<div class="result matched" style="padding-bottom:16px;">
+  <a class="title">Team voice and team creativity: The role of team mindfulness</a>
+  <div class="meta">J Guo, J Qiu - Organization Science, 2023</div>
+  <div class="snippet">… We investigate how team-level voice behavior influences team creativity through a field study of 89 R&D teams …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 23</span><span>Related articles</span></div>
+  <div class="heat-bar-container"><div class="heat-bar" style="width:5%; background: #b0c4de;"></div></div>
+</div>
+
+<div class="result matched" style="padding-bottom:16px;">
+  <a class="title">Voice and silence in organizations: A review and integration</a>
+  <div class="meta">LJ Kish-Gephart - Personnel Psychology, 2024</div>
+  <div class="snippet">… We provide a comprehensive review of the voice and silence literature, integrating findings from over two decades …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 4</span><span>Related articles</span></div>
+  <div class="heat-bar-container"><div class="heat-bar" style="width:2%; background: #ccd9e8;"></div></div>
+</div>
+
+<div class="result" style="padding-bottom:16px;">
+  <a class="title">Talking up or talking down: The role of cultural values in voice expression</a>
+  <div class="meta">R Chen, L Wang - 2022 - repository.lib.university.edu</div>
+  <div class="snippet">… This dissertation examines cross-cultural differences in employee voice …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Related articles</span></div>
+</div>
+
+<div class="result matched" style="padding-bottom:16px;">
+  <a class="title">The voice bystander effect: How information redundancy inhibits voice</a>
+  <div class="meta">J Rhee, A Grant - OBHDP, 2020</div>
+  <div class="snippet">… We draw on bystander research to examine when employees withhold voice even when they recognize problems …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 612</span><span>Related articles</span></div>
+  <div class="heat-bar-container"><div class="heat-bar" style="width:38%; background: linear-gradient(90deg, #c9a032, #d47a00);"></div></div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<div class="section">
+<h2>Option 4 — Dot Constellation</h2>
+<p class="label">1–5 dots in top-right corner. Each dot = one order of magnitude. 1 dot = 1–9, 2 = 10–99, 3 = 100–999, 4 = 1,000–9,999, 5 = 10,000+</p>
+
+<div class="result matched">
+  <a class="title">Employee voice behavior: Integration and directions for future research</a>
+  <div class="meta">EW Morrison - Academy of Management Annals, 2011</div>
+  <div class="snippet">… I begin by reviewing the different conceptualizations of <b>employee voice</b> and define clearly the voice construct and clarify how it relates to …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 2699</span><span>Related articles</span></div>
+  <div class="cite-dots mag-4"><div class="cite-dot"></div><div class="cite-dot"></div><div class="cite-dot"></div><div class="cite-dot"></div></div>
+</div>
+
+<div class="result matched">
+  <a class="title">Speaking up to move up: How voice can enhance or undermine career outcomes</a>
+  <div class="meta">E McClean, S Tangirala - Academy of Management Journal, 2019</div>
+  <div class="snippet">… We examine how the frequency of employee voice relates to subsequent promotions and find that the relationship depends on …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 187</span><span>Related articles</span></div>
+  <div class="cite-dots mag-3"><div class="cite-dot"></div><div class="cite-dot"></div><div class="cite-dot"></div></div>
+</div>
+
+<div class="result matched">
+  <a class="title">Team voice and team creativity: The role of team mindfulness</a>
+  <div class="meta">J Guo, J Qiu - Organization Science, 2023</div>
+  <div class="snippet">… We investigate how team-level voice behavior influences team creativity through a field study of 89 R&D teams …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 23</span><span>Related articles</span></div>
+  <div class="cite-dots mag-2"><div class="cite-dot"></div><div class="cite-dot"></div></div>
+</div>
+
+<div class="result matched">
+  <a class="title">Voice and silence in organizations: A review and integration</a>
+  <div class="meta">LJ Kish-Gephart - Personnel Psychology, 2024</div>
+  <div class="snippet">… We provide a comprehensive review of the voice and silence literature, integrating findings from over two decades …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 4</span><span>Related articles</span></div>
+  <div class="cite-dots mag-1"><div class="cite-dot"></div></div>
+</div>
+
+<div class="result">
+  <a class="title">Talking up or talking down: The role of cultural values in voice expression</a>
+  <div class="meta">R Chen, L Wang - 2022 - repository.lib.university.edu</div>
+  <div class="snippet">… This dissertation examines cross-cultural differences in employee voice …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Related articles</span></div>
+</div>
+
+<div class="result matched">
+  <a class="title">The voice bystander effect: How information redundancy inhibits voice</a>
+  <div class="meta">J Rhee, A Grant - OBHDP, 2020</div>
+  <div class="snippet">… We draw on bystander research to examine when employees withhold voice even when they recognize problems …</div>
+  <div class="links"><span>★ Save</span><span>❝ Cite</span><span>Cited by 612</span><span>Related articles</span></div>
+  <div class="cite-dots mag-3"><div class="cite-dot"></div><div class="cite-dot"></div><div class="cite-dot"></div></div>
+</div>
+</div>
+
+</body>
+</html>

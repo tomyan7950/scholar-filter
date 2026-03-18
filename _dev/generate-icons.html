@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scholar Journal Filter — Icon Generator</title>
+<style>
+  body { font-family: system-ui, sans-serif; padding: 2rem; background: #f5f5f5; }
+  .icon-row { display: flex; gap: 2rem; align-items: end; margin: 2rem 0; }
+  .icon-cell { text-align: center; }
+  canvas { border: 1px dashed #ccc; background: repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50%/16px 16px; }
+  a.dl { display: inline-block; margin-top: .5rem; color: #2e7d32; font-weight: 600; }
+  h1 { color: #2e7d32; }
+</style>
+</head>
+<body>
+<h1>Scholar Journal Filter — Icon Generator</h1>
+<p>Click the download links below each icon to save as PNG.</p>
+<div class="icon-row" id="icons"></div>
+
+<script>
+const GREEN = '#2e7d32';
+const sizes = [16, 48, 128];
+
+function drawFunnel(ctx, size) {
+  ctx.clearRect(0, 0, size, size);
+  ctx.fillStyle = GREEN;
+
+  const m = Math.max(1, Math.floor(size * 0.1));
+  const topY = m;
+  const topH = Math.max(2, Math.floor(size * 0.15));
+  const cx = size / 2;
+  const spoutHalf = Math.max(1, Math.floor(size * 0.12));
+  const trapTop = topY + topH;
+  const trapBot = Math.floor(size * 0.6);
+  const spoutBot = size - m - 1;
+
+  // Top bar
+  ctx.fillRect(m, topY, size - 2 * m, topH);
+
+  // Trapezoid
+  ctx.beginPath();
+  ctx.moveTo(m, trapTop);
+  ctx.lineTo(size - m, trapTop);
+  ctx.lineTo(cx + spoutHalf, trapBot);
+  ctx.lineTo(cx - spoutHalf, trapBot);
+  ctx.closePath();
+  ctx.fill();
+
+  // Spout
+  ctx.fillRect(cx - spoutHalf, trapBot, spoutHalf * 2, spoutBot - trapBot);
+}
+
+const container = document.getElementById('icons');
+
+sizes.forEach(size => {
+  const cell = document.createElement('div');
+  cell.className = 'icon-cell';
+
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  canvas.style.width = Math.max(size, 64) + 'px';
+  canvas.style.height = Math.max(size, 64) + 'px';
+  canvas.style.imageRendering = size <= 48 ? 'pixelated' : 'auto';
+
+  const ctx = canvas.getContext('2d');
+  drawFunnel(ctx, size);
+
+  const label = document.createElement('div');
+  label.textContent = `${size}×${size}`;
+
+  const link = document.createElement('a');
+  link.className = 'dl';
+  link.download = `icon${size}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.textContent = `Download icon${size}.png`;
+
+  cell.appendChild(canvas);
+  cell.appendChild(document.createElement('br'));
+  cell.appendChild(label);
+  cell.appendChild(document.createElement('br'));
+  cell.appendChild(link);
+  container.appendChild(cell);
+});
+</script>
+</body>
+</html>

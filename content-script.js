@@ -17,6 +17,14 @@
 
   let filterStats = { total: 0, matched: 0, nonJournal: 0, highlyCited: 0 };
   let isFiltering = false;
+  let observer = null;
+  let observerTarget = null;
+
+  // ── Page Type Detection ──────────────────────────────────────────
+  const isProfilePage = (() => {
+    const url = new URL(location.href);
+    return url.pathname.includes("/citations") && url.searchParams.has("user");
+  })();
 
   // ── Journal Extraction ─────────────────────────────────────────────
   // Scholar .gs_a line formats:
@@ -68,6 +76,45 @@
     if (/^\d+$/.test(journal)) return null;
 
     return journal;
+  }
+
+  // ── Profile Page Extraction ───────────────────────────────────────
+  // Profile DOM: tr.gsc_a_tr > td.gsc_a_t > div.gs_gray (2nd one = journal text)
+  // Journal text format: "Journal of Management 40 (1), 226-255"
+  function extractJournalFromProfile(rowEl) {
+    const grayDivs = rowEl.querySelectorAll("td.gsc_a_t div.gs_gray");
+    if (grayDivs.length < 2) return null;
+    let text = grayDivs[1].textContent.trim();
+    if (!text) return null;
+    // Strip trailing year: ", 2014" at the end (sometimes inside a span.gs_oph)
+    text = text.replace(/,?\s*\d{4}\s*$/, "").trim();
+    // Strip volume/issue/pages: "40 (1), 226-255" or "40, 226-255" or "(1), 226-255"
+    text = text.replace(/\s+\d+\s*(?:\(.*?\))?\s*(?:,\s*[\w\d\u2013–-]+(?:\s*-\s*[\w\d\u2013–-]+)?)?\s*$/, "").trim();
+    if (!text) return null;
+    return text;
+  }
+
+  function extractCitationCountProfile(rowEl) {
+    const link = rowEl.querySelector("td.gsc_a_c a");
+    if (!link) return 0;
+    const match = link.textContent.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  }
+
+  function extractPaperInfoProfile(rowEl) {
+    const titleEl = rowEl.querySelector("a.gsc_a_at");
+    const title = titleEl ? titleEl.textContent.trim() : "";
+    const grayDivs = rowEl.querySelectorAll("td.gsc_a_t div.gs_gray");
+    const authors = grayDivs.length > 0 ? grayDivs[0].textContent.trim() : "";
+    const rawJournal = rowEl.dataset.sjfJournal || "";
+    const activeJournals = settings.journals.filter((j) => j.enabled !== false);
+    const journal = resolveJournalName(rawJournal, activeJournals);
+    const yearEl = rowEl.querySelector("td.gsc_a_y span");
+    const year = yearEl ? yearEl.textContent.trim() : "";
+    const citedByLink = rowEl.querySelector("td.gsc_a_c a");
+    const citedByMatch = citedByLink ? citedByLink.textContent.match(/\d+/) : null;
+    const citedBy = citedByMatch ? citedByMatch[0] : "0";
+    return { title, authors, year, journal, snippet: "", citedBy, pdfAvailable: "No", pdfUrl: "" };
   }
 
   // ── Journal Matching ───────────────────────────────────────────────
@@ -152,17 +199,20 @@
 
   function injectHighlyCitedBadge(resultEl) {
     if (resultEl.querySelector(".sjf-highly-cited-badge")) return;
-    const gsaEl = resultEl.querySelector(".gs_a");
-    if (!gsaEl) return;
+    const anchor = isProfilePage
+      ? resultEl.querySelectorAll("td.gsc_a_t div.gs_gray")[1]
+      : resultEl.querySelector(".gs_a");
+    if (!anchor) return;
     const badge = document.createElement("span");
     badge.className = "sjf-highly-cited-badge";
     badge.textContent = "Highly Cited";
-    gsaEl.appendChild(badge);
+    anchor.appendChild(badge);
   }
 
   // ── DOM Filtering ──────────────────────────────────────────────────
   function clearFiltering() {
-    document.querySelectorAll(".gs_r.gs_or.gs_scl, .gs_r.gs_or").forEach((el) => {
+    const selector = isProfilePage ? "tr.gsc_a_tr" : ".gs_r.gs_or.gs_scl, .gs_r.gs_or";
+    document.querySelectorAll(selector).forEach((el) => {
       el.classList.remove("sjf-match", "sjf-no-match", "sjf-non-journal", "sjf-dim", "sjf-hide", "sjf-highly-cited");
     });
     removeBanners();
@@ -188,16 +238,22 @@
       });
       banner.appendChild(link);
     }
-    const container = document.getElementById("gs_res") || document.body;
+    const container = (isProfilePage
+      ? document.getElementById("gsc_a_b")?.closest("table")?.parentElement
+      : document.getElementById("gs_res")) || document.body;
     container.insertBefore(banner, container.firstChild);
   }
 
   function applyFiltering() {
+    if (observer) observer.disconnect();
     isFiltering = true;
     try {
       _applyFiltering();
     } finally {
       isFiltering = false;
+      if (observer && observerTarget) {
+        observer.observe(observerTarget, { childList: true, subtree: true });
+      }
     }
   }
 
@@ -206,10 +262,12 @@
 
     if (!settings.enabled) return;
 
-    const results = document.querySelectorAll(".gs_r.gs_or.gs_scl, .gs_r.gs_or");
+    const resultSelector = isProfilePage ? "tr.gsc_a_tr" : ".gs_r.gs_or.gs_scl, .gs_r.gs_or";
+    const results = document.querySelectorAll(resultSelector);
     if (results.length === 0) {
       // Check if we're on a results page but can't find results
-      if (document.querySelector("#gs_res")) {
+      const pageContainer = isProfilePage ? document.querySelector("#gsc_a_b") : document.querySelector("#gs_res");
+      if (pageContainer) {
         showBanner("Scholar Journal Filter couldn't parse this page. The extension may need an update.");
       }
       return;
@@ -220,18 +278,25 @@
     let trulyUnparseable = 0;
 
     results.forEach((result) => {
-      const gsaEl = result.querySelector(".gs_a");
-      const journal = extractJournal(gsaEl);
+      const journal = isProfilePage
+        ? extractJournalFromProfile(result)
+        : extractJournal(result.querySelector(".gs_a"));
 
       // Check highly-cited status
-      const citationCount = settings.highlyCitedEnabled ? extractCitationCount(result) : 0;
+      const citationCount = settings.highlyCitedEnabled
+        ? (isProfilePage ? extractCitationCountProfile(result) : extractCitationCount(result))
+        : 0;
       const isHighlyCited = settings.highlyCitedEnabled && citationCount >= settings.highlyCitedThreshold;
 
       if (!journal) {
         filterStats.nonJournal++;
-        // Distinguish genuinely unparseable (missing/empty .gs_a) from recognized non-journal items
-        if (!gsaEl || !gsaEl.textContent.trim()) {
-          trulyUnparseable++;
+        // Distinguish genuinely unparseable from recognized non-journal items
+        if (isProfilePage) {
+          const grayDivs = result.querySelectorAll("td.gsc_a_t div.gs_gray");
+          if (grayDivs.length < 2 || !grayDivs[1].textContent.trim()) trulyUnparseable++;
+        } else {
+          const gsaEl = result.querySelector(".gs_a");
+          if (!gsaEl || !gsaEl.textContent.trim()) trulyUnparseable++;
         }
         result.classList.add("sjf-non-journal");
 
@@ -308,6 +373,7 @@
   // Scholar's hidden `num` parameter still works even though the UI setting was removed.
   // Redirect to num=20 on search pages so more results are available for filtering.
   function boostResultsPerPage() {
+    if (isProfilePage) return;
     const url = new URL(window.location.href);
     // Only boost on search results pages (has a query), not on other Scholar pages
     if (!url.searchParams.has("q")) return;
@@ -388,12 +454,14 @@
   });
 
   // ── MutationObserver (for dynamic Scholar results) ─────────────────
-  const resContainer = document.getElementById("gs_res");
-  if (resContainer) {
-    const observer = new MutationObserver(() => {
+  observerTarget = isProfilePage
+    ? document.getElementById("gsc_a_b")
+    : document.getElementById("gs_res");
+  if (observerTarget) {
+    observer = new MutationObserver(() => {
       if (!isFiltering) applyFiltering();
     });
-    observer.observe(resContainer, { childList: true, subtree: true });
+    observer.observe(observerTarget, { childList: true, subtree: true });
   }
 
   // ── Selection & Export ──────────────────────────────────────────────
@@ -454,7 +522,8 @@
   }
 
   function injectCheckboxes() {
-    const results = document.querySelectorAll(".gs_r.gs_or.gs_scl, .gs_r.gs_or");
+    const selector = isProfilePage ? "tr.gsc_a_tr" : ".gs_r.gs_or.gs_scl, .gs_r.gs_or";
+    const results = document.querySelectorAll(selector);
     results.forEach((result) => {
       if (result.querySelector(".sjf-checkbox-wrap")) return;
 
@@ -465,14 +534,14 @@
       cb.className = "sjf-checkbox";
       cb.title = "Select for export";
 
-      const info = extractPaperInfo(result);
+      const info = isProfilePage ? extractPaperInfoProfile(result) : extractPaperInfo(result);
       if (selectedPapers.has(info.title)) {
         cb.checked = true;
         result.classList.add("sjf-selected");
       }
 
       cb.addEventListener("change", () => {
-        const paperInfo = extractPaperInfo(result);
+        const paperInfo = isProfilePage ? extractPaperInfoProfile(result) : extractPaperInfo(result);
         if (cb.checked) {
           selectedPapers.set(paperInfo.title, paperInfo);
           result.classList.add("sjf-selected");
@@ -485,7 +554,12 @@
       });
 
       wrap.appendChild(cb);
-      result.appendChild(wrap);
+      if (isProfilePage) {
+        const firstTd = result.querySelector("td.gsc_a_t");
+        if (firstTd) firstTd.appendChild(wrap);
+      } else {
+        result.appendChild(wrap);
+      }
     });
   }
 
@@ -521,11 +595,12 @@
   }
 
   function selectAllMatched() {
-    document.querySelectorAll(".gs_r.sjf-match").forEach((result) => {
+    const selector = isProfilePage ? "tr.gsc_a_tr.sjf-match" : ".gs_r.sjf-match";
+    document.querySelectorAll(selector).forEach((result) => {
       const cb = result.querySelector(".sjf-checkbox");
       if (cb && !cb.checked) {
         cb.checked = true;
-        const info = extractPaperInfo(result);
+        const info = isProfilePage ? extractPaperInfoProfile(result) : extractPaperInfo(result);
         selectedPapers.set(info.title, info);
         result.classList.add("sjf-selected");
       }
@@ -717,7 +792,7 @@
   // ── Context Menu Support ───────────────────────────────────────────
   // Always send the journal name (or null) so the background can enable/disable the menu item
   document.addEventListener("contextmenu", (e) => {
-    const resultEl = e.target.closest(".gs_r");
+    const resultEl = isProfilePage ? e.target.closest("tr.gsc_a_tr") : e.target.closest(".gs_r");
     chrome.runtime.sendMessage({
       type: "contextJournal",
       journal: resultEl?.dataset?.sjfJournal || null,

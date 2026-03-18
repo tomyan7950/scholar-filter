@@ -1,7 +1,7 @@
 /* Scholar Journal Filter — Content Styles */
 
-/* Highlight mode: matching results get a green left border */
-.sjf-match {
+/* Highlight mode: matching results get a green left border (search pages) */
+.gs_r.sjf-match {
   border-left: 4px solid #2e7d32 !important;
   padding-left: 12px !important;
   transition: border-color 0.2s, opacity 0.2s;
@@ -68,6 +68,38 @@
 
 .sjf-selected {
   background: #e8f5e9 !important;
+}
+
+/* ── Profile Page Styles ──────────────────── */
+tr.gsc_a_tr {
+  position: relative !important;
+}
+
+tr.gsc_a_tr.sjf-match > td:first-child {
+  border-left: 4px solid #2e7d32 !important;
+  padding-left: 12px !important;
+}
+
+tr.gsc_a_tr.sjf-hide {
+  display: none !important;
+}
+
+tr.gsc_a_tr.sjf-dim {
+  opacity: 0.5 !important;
+}
+
+tr.gsc_a_tr.sjf-dim:hover {
+  opacity: 0.85 !important;
+}
+
+tr.gsc_a_tr.sjf-selected {
+  background: #e8f5e9 !important;
+}
+
+tr.gsc_a_tr .sjf-checkbox-wrap {
+  position: absolute;
+  top: 8px;
+  left: -24px;
 }
 
 /* ── Floating Export Toolbar ────────────────── */
