@@ -1,9 +1,10 @@
 # Scholar Journal Filter
 
-A Chrome extension that filters Google Scholar search results by journal. Highlight, dim, or hide results based on a customizable journal list — so you only see papers from outlets relevant to your field.
+A Chrome extension that filters Google Scholar search results and author profile pages by journal. Highlight, dim, or hide results based on a customizable journal list — so you only see papers from outlets relevant to your field.
 
 ## Features
 
+- **Search results and profile pages**: Filter journals on search results pages and on any author's Google Scholar profile — see which of their publications appear in your target journals
 - **Pre-loaded journal list**: Ships with a curated default list covering management, psychology, sociology, reviews, and general science outlets
 - **Customizable journal list**: Add, edit, or remove journals and aliases through the options page or right-click any Scholar result to add its journal instantly
 - **Display modes**: Highlight matching journals (green border), dim non-matching results, or hide them entirely. Whitelist or blacklist. Non-journal items (books, theses, working papers) can be independently shown, dimmed, or hidden
@@ -12,27 +13,12 @@ A Chrome extension that filters Google Scholar search results by journal. Highli
 
 ## Installation
 
-Since this extension is not yet on the Chrome Web Store, you need to load it manually. This takes about 60 seconds.
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/mijlopmilamcdifamdekcihlcgjkfjag) — or load manually for development:
 
-### Step 1: Download
-
-1. On this GitHub page, click the green **Code** button near the top
-2. Click **Download ZIP**
-3. Unzip the downloaded file to a folder you'll keep (e.g., `Documents/scholar-filter`)
-
-### Step 2: Load in Chrome
-
-1. Open Chrome and go to `chrome://extensions` (type it in the address bar)
-2. In the top-right corner, toggle **Developer mode** ON
-3. Click **Load unpacked** (top-left)
-4. Select the folder you unzipped in Step 1 (the one containing `manifest.json`)
-5. The extension icon should appear in your Chrome toolbar
-
-### Step 3: Verify
-
-1. Go to [Google Scholar](https://scholar.google.com) and run any search
-2. You should see green borders on results from journals in the default list
-3. Click the extension icon to see the popup with filtering controls
+1. Clone or download this repo
+2. Open `chrome://extensions`, toggle **Developer mode** ON
+3. Click **Load unpacked**, select the folder containing `manifest.json`
+4. Go to [Google Scholar](https://scholar.google.com), run a search — matching journals get green borders
 
 ## How to Use
 
@@ -108,7 +94,7 @@ You can customize this list at any time through the options page.
 
 **No results are highlighted**: Your journal list might not include the journals on the current page. Click the extension icon to see how many results matched. Try switching to a broader search or adding more journals.
 
-**Extension doesn't activate**: Make sure you're on a Google Scholar search results page (not a profile page or the homepage). The extension only runs on pages with search results.
+**Extension doesn't activate**: Make sure you're on a Google Scholar search results page or an author profile page. The extension does not run on the Scholar homepage or settings pages.
 
 **"All results filtered" banner**: When using Hide mode with a whitelist, if no results on the page match your journals, the extension automatically switches to Dim mode and shows a banner. This prevents showing an empty page.
 
@@ -121,6 +107,14 @@ You can customize this list at any time through the options page.
 - The extension does not track usage, collect analytics, or phone home.
 
 ## Changelog
+
+### v1.1.0 — 2026-03-18
+- **Profile page filtering**: Visit any author's Google Scholar profile to filter their publications by journal. All display modes, highly cited badges, checkboxes, and export work on profile pages
+- **"Show more" support**: New rows loaded via "Show more" on profile pages are filtered automatically
+
+### v1.0.0 — 2026-03-17
+- First Chrome Web Store release
+- Pre-loads 5 core journal categories (49 journals) on first install
 
 ### v0.4 — 2026-03-17
 - **Category picker**: First-run and "Reset to Defaults" now show a category selection modal — choose which journal groups to load instead of getting everything
