@@ -2,3 +2,7 @@
 Thumbs.db
 *.crx
 *.pem
+*.zip
+_dev/
+CLAUDE.md
+.claude/
